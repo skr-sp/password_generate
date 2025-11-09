@@ -19,11 +19,12 @@
 
     // 配列のシャッフル関数
     const shuffle = (array) => {
-        for (let idx = array.length - 1; idx > 0; idx--) {
-            const passCharar = Math.floor(Math.random() * (idx + 1));
-            [array[idx], array[passCharar]] = [array[passCharar], array[idx]];
+        const shuffled = [...array];
+        for (let idx = shuffled.length - 1; idx > 0; idx--) {
+            const randomIdx = Math.floor(Math.random() * (idx + 1));
+            [shuffled[idx], shuffled[randomIdx]] = [shuffled[randomIdx], shuffled[idx]];
         }
-        return array;
+        return shuffled;
     };
 
     // パスワード表示関数
