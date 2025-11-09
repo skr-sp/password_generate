@@ -1,28 +1,45 @@
 'use strict';
 
 {
-    // 配列のシャッフル
+    // 変数定義
+    const CHARACTER_SETS = {
+        letters: 'abcdefghijklmnopqrstuvwxyz',
+        numbers: '0123456789',
+        symbols: '!@#$%^&*()_+[]{}|;:,.<>?'
+    };
+
+    const DOM_IDS = {
+        passWindow: 'pass-window',
+        slider: 'slider',
+        numbersCheckbox: 'numbers-checkbox',
+        symbolsCheckbox: 'symbols-checkbox',
+        passwordLength: 'password-length',
+        getPassButton: 'getPass-button'
+    };
+
+    // 配列のシャッフル関数
     const shuffle = (array) => {
         for (let idx = array.length - 1; idx > 0; idx--) {
             const passCharar = Math.floor(Math.random() * (idx + 1));
             [array[idx], array[passCharar]] = [array[passCharar], array[idx]];
         }
         return array;
-    }
+    };
 
-    // パスワード表示
+    // パスワード表示関数
     const showPassword = () => {
         // 画面要素の取得
-        const result            = document.getElementById('pass-window');
-        const slider            = document.getElementById('slider');
-        const numbersCheckbox   = document.getElementById('numbers-checkbox');
-        const symbolsCheckbox   = document.getElementById('symbols-checkbox');
+        const result            = document.getElementById(DOM_IDS.passWindow);
+        const slider            = document.getElementById(DOM_IDS.slider);
+        const numbersCheckbox   = document.getElementById(DOM_IDS.numbersCheckbox);
+        const symbolsCheckbox   = document.getElementById(DOM_IDS.symbolsCheckbox);
 
         // 文字種の定義
-        const letters       = 'abcdefghijklmnopqrstuvwxyz';
-        const numbers       = '0123456789';
-        const symbols       = '!@#$%^&*()_+[]{}|;:,.<>?';
-        let seed            = letters + letters.toUpperCase();
+        const letters       = CHARACTER_SETS.letters;
+        const numbers       = CHARACTER_SETS.numbers;
+        const symbols       = CHARACTER_SETS.symbols;
+
+        let seed            = CHARACTER_SETS.letters + CHARACTER_SETS.letters.toUpperCase();
         const mustInclude   = [];
         let passwordChars   = [];
 
@@ -53,12 +70,12 @@
 
     // move slider
     slider.addEventListener('input', () => {
-        const passLength = document.getElementById('password-length');
+        const passLength = document.getElementById(DOM_IDS.passwordLength);
         passLength.textContent = slider.value;
     });
 
     // button onclick
-    const button = document.getElementById('getPass-button');
+    const button = document.getElementById(DOM_IDS.getPassButton);
     button.addEventListener('click', showPassword);
 
     // 初回実行
