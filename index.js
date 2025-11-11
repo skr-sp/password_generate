@@ -18,18 +18,37 @@
     };
 
     /**
-     * 配列をシャッフルする関数
-     * @param {Array} array - シャッフルする配列
-     * @returns {Array} - シャッフルされた新しい配列
+     * DOM要素の取得
      */
-    const shuffle = (array) => {
-        const shuffled = [...array];
-        for (let idx = shuffled.length - 1; idx > 0; idx--) {
-            const randomIdx = Math.floor(Math.random() * (idx + 1));
-            [shuffled[idx], shuffled[randomIdx]] = [shuffled[randomIdx], shuffled[idx]];
-        }
-        return shuffled;
-    };
+    const getDomElements = () => {
+        return {
+            passWindow: document.getElementById(DOM_IDS.passWindow),
+            slider: document.getElementById(DOM_IDS.slider),
+            numbersCheckbox: document.getElementById(DOM_IDS.numbersCheckbox),
+            symbolsCheckbox: document.getElementById(DOM_IDS.symbolsCheckbox),
+            passwordLength: document.getElementById(DOM_IDS.passwordLength),
+            getPassButton: document.getElementById(DOM_IDS.getPassButton)
+        };
+    }
+
+    /**
+     * パスワードを生成する関数
+     * @param {int} length
+     * @param {boolean} includeNumbers 
+     * @param {boolean} includeSymbols 
+     * @returns 
+     */
+    const generatePassword = (length, includeNumbers, includeSymbols) => {
+        const characterSet = buildCharacterSet(includeNumbers, includeSymbols);
+        const mustInclude = getMustIncludeCharacters(includeNumbers, includeSymbols);
+        const remainingLength = length - mustInclude.length;
+
+        const randomChar = generateRandomCharacters(characterSet, remainingLength);
+        let allCharacters = randomChar.concat(mustInclude);
+        allCharacters = shuffle(allCharacters);
+
+        return allCharacters.join('');
+    }
 
     /**
      * 文字セットを構築する関数
@@ -96,47 +115,43 @@
         return character;
     }
 
-    const generatePassword = (includeNumbers, includeSymbols) => {
-        const characterSet = buildCharacterSet(includeNumbers, includeSymbols);
-        const mustInclude = getMustIncludeCharacters(includeNumbers, includeSymbols);
-        const remainingLength = slider.value - mustInclude.length;
-
-        const length = generateRandomCharacters(characterSet, remainingLength);
-        let allCharacters = length.concat(mustInclude);
-        allCharacters = shuffle(allCharacters);
-
-        return allCharacters.join('');
-    }
+    /**
+     * 配列をシャッフルする関数
+     * @param {Array} array - シャッフルする配列
+     * @returns {Array} - シャッフルされた新しい配列
+     */
+    const shuffle = (array) => {
+        const shuffled = [...array];
+        for (let idx = shuffled.length - 1; idx > 0; idx--) {
+            const randomIdx = Math.floor(Math.random() * (idx + 1));
+            [shuffled[idx], shuffled[randomIdx]] = [shuffled[randomIdx], shuffled[idx]];
+        }
+        return shuffled;
+    };
 
     /**
      * パスワードを表示する関数
      */
-    const showPassword = () => {
-        // 画面要素の取得
-        const result            = document.getElementById(DOM_IDS.passWindow);
-        const slider            = document.getElementById(DOM_IDS.slider);
-        const numbersCheckbox   = document.getElementById(DOM_IDS.numbersCheckbox);
-        const symbolsCheckbox   = document.getElementById(DOM_IDS.symbolsCheckbox);
+    const showPassword = (elements) => {
+        const length = parseInt(elements.slider.value);
+        const isIncludeNumbers = elements.numbersCheckbox.checked;
+        const isIncludeSymbols = elements.symbolsCheckbox.checked;
 
-        const length = parseInt(slider.value);
-        const isInccludeNumbers = numbersCheckbox.checked;
-        const isInccludeSymbols = symbolsCheckbox.checked;
-
-        const passwordChars = generatePassword(isInccludeNumbers, isInccludeSymbols);
-
-        result.textContent = passwordChars;
+        const password = generatePassword(length, isIncludeNumbers, isIncludeSymbols);
+        elements.passWindow.textContent = password;
     }
 
+    // DOM要素の取得
+    const elements = getDomElements();
+
     // move slider
-    slider.addEventListener('input', () => {
-        const passLength = document.getElementById(DOM_IDS.passwordLength);
-        passLength.textContent = slider.value;
+    elements.slider.addEventListener('input', () => {
+        elements.passwordLength.textContent = elements.slider.value;
     });
 
     // button onclick
-    const button = document.getElementById(DOM_IDS.getPassButton);
-    button.addEventListener('click', showPassword);
+    elements.getPassButton.addEventListener('click', () => showPassword(elements));
 
     // 初回実行
-    showPassword();
+    showPassword(elements);
 }
