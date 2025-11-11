@@ -1,11 +1,11 @@
 // 変数定義
-const CHARACTER_SETS = {
+export const CHARACTER_SETS = {
     letters: 'abcdefghijklmnopqrstuvwxyz',
     numbers: '0123456789',
     symbols: '!@#$%^&*()_+[]{}|;:,.<>?'
 };
 
-const DOM_IDS = {
+export const DOM_IDS = {
     passWindow:      'pass-window',
     slider:          'slider',
     numbersCheckbox: 'numbers-checkbox',
@@ -17,8 +17,9 @@ const DOM_IDS = {
 /**
  * DOM要素を取得する関数
  * @returns {Object} - DOM要素のオブジェクト
+ * passWindow, slider, numbersCheckbox, symbolsCheckbox, passwordLength, getPassButton
  */
-export const getDomElements = () => {
+export const getDOMElements = () => {
     return {
         passWindow: document.getElementById(DOM_IDS.passWindow),
         slider: document.getElementById(DOM_IDS.slider),
@@ -31,10 +32,10 @@ export const getDomElements = () => {
 
 /**
  * パスワードを生成する関数
- * @param {int} length
- * @param {boolean} includeNumbers 
- * @param {boolean} includeSymbols 
- * @returns 
+ * @param {number} length - パスワードの長さ
+ * @param {boolean} includeNumbers - 数字を含めるかどうか
+ * @param {boolean} includeSymbols - 記号を含めるかどうか
+ * @returns {string} - 生成されたパスワード
  */
 export const generatePassword = (length, includeNumbers, includeSymbols) => {
     const characterSet = buildCharacterSet(includeNumbers, includeSymbols);
@@ -145,13 +146,7 @@ export const updatePasswordDisplay = (elements) => {
  * @param {Object} elements - DOM要素のオブジェクト
  */
 export const updateSliderDisplay = (elements) => {
-    elements.slider.addEventListener('input', () => {
-        updateSliderDisplay(elements);
-    });
-
-    elements.getPassButton.addEventListener('click', () => {
-        updatePasswordDisplay(elements);
-    });
+    elements.passwordLength.textContent = elements.slider.value;
 };
 
 /** 
@@ -170,7 +165,7 @@ export const setupEventListeners = (elements) => {
 
 // アプリケーションの初期化
 export const initializeApp = () => {
-    const elements = getDomElements();
+    const elements = getDOMElements();
     setupEventListeners(elements);
     updatePasswordDisplay(elements);
 };
