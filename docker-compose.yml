@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+    web:
+        build: .
+        ports:
+            - "3000:80"
+        volumes:
+            # ホットリロード用: ローカルファイルをコンテナにマウント
+            - ./index.html:/usr/share/nginx/html/index.html
+            - ./index.js:/usr/share/nginx/html/index.js
+            - ./styles.css:/usr/share/nginx/html/styles.css
+        container_name: password-generator
